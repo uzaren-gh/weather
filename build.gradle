@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+java {
+
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation 'com.squareup.retrofit2:converter-gson:3.0.0'
+    implementation("org.projectlombok:lombok:1.18.48")
+    annotationProcessor 'org.projectlombok:lombok:1.18.48'
+    implementation("ch.qos.logback:logback-classic:1.6.3")
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+}
+
+application {
+    mainClass = 'org.weather.WeatherForecast'
+}
+
+test {
+    useJUnitPlatform()
+}
