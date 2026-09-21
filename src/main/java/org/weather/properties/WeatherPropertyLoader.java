@@ -10,6 +10,7 @@ import java.util.*;
 public class WeatherPropertyLoader {
 
     private static final String CONFIG_FILE = "weather.properties";
+    private static final String API_KEY = System.getenv("WEATHER_API_KEY");
 
     private WeatherPropertyLoader() {
     }
@@ -18,7 +19,8 @@ public class WeatherPropertyLoader {
         Properties props = readProperties();
         return new WeatherProperties(
                 parseList("cities", props.getProperty("cities", "")),
-                parseAndValidateParams(props.getProperty("weather.params", ""))
+                parseAndValidateParams(props.getProperty("weather.params", "")),
+                API_KEY
         );
     }
 
@@ -59,12 +61,15 @@ public class WeatherPropertyLoader {
         List<String> params = parseList("weather.params", raw);
         Set<String> supported = WeatherParameterRegistry.supportedKeys();
 
+        List<String> valid = new ArrayList<>();
         for (String p : params) {
-            if (!supported.contains(p)) {
+            if (supported.contains(p)) {
+                valid.add(p);
+            } else {
                 log.warn("Unsupported weather parameter '{}', it will be ignored. Supported: {}",
                         p, supported);
             }
         }
-        return params;
+        return valid;
     }
 }

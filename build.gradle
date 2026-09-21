@@ -22,6 +22,9 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.48")
     annotationProcessor 'org.projectlombok:lombok:1.18.48'
     implementation("ch.qos.logback:logback-classic:1.6.3")
+    implementation 'org.slf4j:jul-to-slf4j:2.0.18'
+
+    implementation("com.squareup.okhttp3:logging-interceptor:5.5.0")
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
 }

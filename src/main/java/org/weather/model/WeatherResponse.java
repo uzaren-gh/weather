@@ -8,14 +8,7 @@ import java.util.List;
 @Getter
 public class WeatherResponse {
 
-    private Location location;
     private Forecast forecast;
-
-    @Getter
-    public static class Location {
-        private String name;
-        private String country;
-    }
 
     @Getter
     public static class Forecast {
