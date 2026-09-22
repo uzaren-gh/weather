@@ -1,10 +1,11 @@
 plugins {
     id 'java'
     id 'application'
+    id 'com.gradleup.shadow' version '9.5.0'
 }
 
-group = 'org.example'
-version = '1.0-SNAPSHOT'
+group = 'org.weather-forecast'
+version = '1.0.0'
 
 java {
 
@@ -27,6 +28,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:5.5.0")
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 application {
