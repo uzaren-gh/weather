@@ -20,12 +20,14 @@ public class WeatherPropertyLoader {
         return new WeatherProperties(
                 parseList("cities", props.getProperty("cities", "")),
                 parseAndValidateParams(props.getProperty("weather.params", "")),
-                API_KEY
+                API_KEY,
+                props.getProperty("weather.api.baseUrl", "https://api.weatherapi.com/v1/").trim()
         );
     }
 
     private static Properties readProperties() {
         Properties props = new Properties();
+        log.info("Try to read properties from {}", CONFIG_FILE);
         try (InputStream in = WeatherPropertyLoader.class
                 .getClassLoader()
                 .getResourceAsStream(CONFIG_FILE)) {
@@ -38,6 +40,7 @@ public class WeatherPropertyLoader {
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load " + CONFIG_FILE, e);
         }
+        log.info("Properties are successfully read" );
         return props;
     }
 

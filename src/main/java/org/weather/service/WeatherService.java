@@ -1,4 +1,4 @@
-package org.weather;
+package org.weather.service;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -12,13 +12,13 @@ import java.io.IOException;
 
 public class WeatherService {
 
-    private static final String BASE_URL = "https://api.weatherapi.com/v1/";
+    //private static final String BASE_URL = "https://api.weatherapi.com/v1/";
     private static final int FORECAST_DAYS = 2; // 0 — today, 1 — tomorrow
 
     private final WeatherApi api;
     private final String apiKey;
 
-    public WeatherService(String apiKey) {
+    public WeatherService(String apiKey, String baseUrl) {
         this.apiKey = apiKey;
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -29,7 +29,7 @@ public class WeatherService {
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(baseUrl)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

@@ -34,15 +34,25 @@ A console Java application that fetches tomorrow's weather forecast for a list o
    export WEATHER_API_KEY=your_key
    ```
 
+   On Windows (PowerShell):
+   ```powershell
+   $env:WEATHER_API_KEY = "your_key"
+   ```
+
 2. Edit `src/main/resources/weather.properties`:
 
    ```properties
+   weather.api.baseUrl=https://api.weatherapi.com/v1/
    cities=Chisinau,Madrid,Kyiv,Amsterdam,Odesa
    weather.params=minTemp,maxTemp,humidity,windSpeed,windDirection
    ```
 
    - `cities` — a comma-separated list of cities (passed to WeatherAPI as-is).
-   - `weather.params` — a comma-separated list of output columns; allowed values are listed above.
+   - `weather.params` — a comma-separated list of output columns; allowed values are listed above. Unsupported values are ignored with a warning.
+   - Duplicate values are allowed but a warning is logged.
+   
+For development, the file lives in src/main/resources/weather.properties. 
+It is excluded from the fat JAR and must be supplied externally at runtime (see below).
 
 ## Running
 
@@ -56,6 +66,53 @@ On Windows:
 gradlew.bat run
 ```
 
+## Building a fat JAR
+```bash
+./gradlew shadowJar
+```
+The result is build/libs/weather-<version>-all.jar — a self-contained JAR with all runtime dependencies.
+
+## Running the fat JAR
+The weather.properties and logback.xml file is not packaged inside the JAR (see the processResources { exclude ... } block in build.gradle).
+It must be placed next to the JAR before running:
+
+app/
+├── weather-project-1.0.0-all.jar
+└── weather.properties
+└── logback.xml
+
+or
+
+app/
+├── weather-project-1.0.0-all.jar
+└── config 
+      └──weather.properties
+      └──logback.xml
+
+Then:
+
+```bash
+java -jar weather-project-1.0.0-all.jar
+```
+
+How the config file is located
+
+The loader looks for weather.properties in the following order and uses the first readable one:
+
+    The directory passed via -Dweather.config=/path/to/dir (highest priority).
+
+    The current working directory (.).
+
+    The config/ subdirectory of the current working directory.
+
+    The parent directory (..).
+
+    The config/ subdirectory of the parent directory.
+
+    The classpath (fallback, e.g. when the file is bundled).
+
+This means the same JAR works in IDEA (cwd = project root), in a shell (cwd = folder with the JAR), and in a distribution layout with a dedicated config/ folder.
+
 ## Sample output
 
 ```
@@ -66,6 +123,19 @@ gradlew.bat run
 | Madrid    | 15.0    | 27.0    | 40       | 12.0      | SW            |
 +-----------+---------+---------+----------+-----------+---------------+
 ```
+
+## Error handling
+
+The application follows a "do as much as you can" principle:
+
+    If the forecast for one city fails (network error, invalid city name, API error), the row for that city is skipped and a warning is logged. Other cities are still printed.
+
+    If a single parameter can't be extracted (e.g. hourly data is missing, so windDirection can't be computed), the cell shows n/a.
+
+    If an extractor throws (e.g. the API returned fewer days than expected), the cell shows err.
+
+The report is always printed, even if some data is missing — a single failure never takes down the whole run.
+
 
 ## Project structure
 

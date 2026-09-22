@@ -14,11 +14,13 @@ class WeatherPropertiesTest {
         WeatherProperties props = new WeatherProperties(
                 List.of("Kyiv", "Madrid"),
                 List.of("minTemp", "maxTemp"),
-                "api-key");
+                "api-key",
+                "base-url");
 
         assertEquals(List.of("Kyiv", "Madrid"), props.cities());
         assertEquals(List.of("minTemp", "maxTemp"), props.parameters());
         assertEquals("api-key", props.apiKey());
+        assertEquals("base-url", props.baseUrl());
     }
 
     @Test
@@ -26,7 +28,7 @@ class WeatherPropertiesTest {
         List<String> cities = new ArrayList<>(List.of("Kyiv"));
         List<String> parameters = new ArrayList<>(List.of("minTemp"));
 
-        WeatherProperties props = new WeatherProperties(cities, parameters, "api-key");
+        WeatherProperties props = new WeatherProperties(cities, parameters, "api-key", "base-url");
 
         cities.add("Madrid");
         parameters.add("maxTemp");
@@ -37,7 +39,7 @@ class WeatherPropertiesTest {
 
     @Test
     void resultingListsAreImmutable() {
-        WeatherProperties props = new WeatherProperties(List.of("Kyiv"), List.of("minTemp"), "api-key");
+        WeatherProperties props = new WeatherProperties(List.of("Kyiv"), List.of("minTemp"), "api-key", "base-url");
 
         assertThrows(UnsupportedOperationException.class, () -> props.cities().add("Madrid"));
         assertThrows(UnsupportedOperationException.class, () -> props.parameters().add("maxTemp"));
@@ -46,6 +48,6 @@ class WeatherPropertiesTest {
     @Test
     void rejectsNullApiKey() {
         assertThrows(IllegalArgumentException.class,
-                () -> new WeatherProperties(List.of("Kyiv"), List.of("minTemp"), null));
+                () -> new WeatherProperties(List.of("Kyiv"), List.of("minTemp"), null, "base-url"));
     }
 }

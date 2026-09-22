@@ -6,6 +6,7 @@ import org.weather.model.WeatherResponse;
 import org.weather.print.TablePrinter;
 import org.weather.properties.WeatherProperties;
 import org.weather.properties.WeatherPropertyLoader;
+import org.weather.service.WeatherService;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Map;
 public class WeatherForecast {
 
     public static void main(String[] args) {
+        System.out.println("System.getProperty(\"java.class.path\") = " + System.getProperty("java.class.path"));
 
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
@@ -22,11 +24,11 @@ public class WeatherForecast {
 
         WeatherProperties config = WeatherPropertyLoader.load();
 
-        WeatherService service = new WeatherService(config.apiKey());
+        WeatherService service = new WeatherService(config.apiKey(), config.baseUrl());
 
         Map<String, WeatherResponse> results = new LinkedHashMap<>();
         for (String city : config.cities()) {
-            log.info("Fetching forecast for '{}'", city);
+            log.debug("Fetching forecast for '{}'", city);
             try {
                 WeatherResponse response = service.getTomorrowForecast(city);
                 if (response == null) {

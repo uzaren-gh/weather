@@ -31,6 +31,20 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+processResources {
+    exclude('weather.properties')
+    exclude('logback.xml')
+}
+
+shadowJar {
+    manifest {
+        attributes(
+                'Main-Class': 'org.weather.WeatherForecast',
+                'Class-Path': '. config/'
+        )
+    }
+}
+
 application {
     mainClass = 'org.weather.WeatherForecast'
 }

@@ -2,7 +2,11 @@ package org.weather.properties;
 
 import java.util.List;
 
-public record WeatherProperties(List<String> cities, List<String> parameters, String apiKey) {
+public record WeatherProperties(
+        List<String> cities,
+        List<String> parameters,
+        String apiKey,
+        String baseUrl) {
 
     public WeatherProperties {
         cities = List.copyOf(cities);
